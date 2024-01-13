@@ -1,5 +1,7 @@
 #include "Functionalaties.h"
+#include <mutex>
 
+std::mutex mt;
 void CreateObjects(container &data)
 {
     data.emplace_back(
@@ -40,8 +42,10 @@ c]if pointer is of type businessowner
       2. use the fetched pointer to fetch type of employee
       3.if type is regulr tax is 10% it should 20% salary
 */
+
 void Paytax(const container &data)
 {
+    mt.lock();
     for (const pointr &ptr : data)
     {
         const Vtype &val = ptr->instance();
@@ -49,12 +53,12 @@ void Paytax(const container &data)
         if (std::holds_alternative<BusinessOwnerType>(val))
         {
             const BusinessOwnerType &p = std::get<BusinessOwnerType>(val);
-            std::cout <<"Business: "<< 0.1f * (p->revenue() - p->expenses());
+            std::cout << "Business: " << 0.1f * (p->revenue() - p->expenses());
         }
         else
         {
-            const EmployeeType &p = std::get<EmployeeType>(val);
-            if (p->type() == Employtype::REGULAR)
+
+            if (const EmployeeType &p = std::get<EmployeeType>(val); p->type() == Employtype::REGULAR)
             {
                 std::cout << "Employee: " << 0.1f * p->salary() << "\n";
             }
@@ -64,6 +68,7 @@ void Paytax(const container &data)
             }
         }
     }
+    mt.unlock();
 }
 /*
 call parent operator overload
@@ -71,11 +76,15 @@ call parent operator overload
 
 void CalParentOperator(const container &data)
 {
-
-    if(data.empty()){
+    mt.lock();
+    if (data.empty())
+    {
         throw std::runtime_error("Data Empty\n");
     }
-            for(const  pointr &ptr:data){
-                ptr->operator()();
-            }
+    for (const pointr &ptr : data)
+    {
+        std::lock_guard<std::mutex> lk(mt);
+        ptr->operator()();
+    }
+    mt.unlock();
 }

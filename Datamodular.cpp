@@ -19,3 +19,21 @@ Datamodular::Datamodular(Vtype type, const std::vector<float> &price)
     : _instance(std::move(type)), _goodsPrices(price)
 {
 }
+
+std::ostream &operator<<(std::ostream &os, const Datamodular &rhs)
+{
+    os << "_instance: ";
+    std::visit(
+        [&](auto &&p)
+        { os << *p; },
+
+        rhs._instance);
+
+    os << " _goodsPrices: ";
+
+    for (float val : rhs._goodsPrices)
+    {
+        os << val << "\n";
+    }
+    return os;
+}

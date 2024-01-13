@@ -10,13 +10,13 @@ private:
     float _Salary;
 
 public:
-    Employee(std::string name,Employtype type,float salary);
+    Employee(std::string name, Employtype type, float salary);
     Employee() = delete;
     Employee(const Employee &) = delete;
     Employee(Employee &&) = delete;
     Employee operator=(Employee &&) = delete;
 
-    ~Employee() =default;
+    ~Employee() = default;
 
     Employtype type() const { return _type; }
 

@@ -31,6 +31,8 @@ public:
    const Vtype& instance() const { return _instance; }
 
     std::vector<float>goodsPrices() const { return _goodsPrices; }
+
+    friend std::ostream &operator<<(std::ostream &os, const Datamodular &rhs);
 };
 
  
